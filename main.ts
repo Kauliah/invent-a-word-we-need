@@ -16,6 +16,18 @@ import { mkdirSync, writeFileSync } from "node:fs";
 const entry =
   "callhearsal — rehearsing a phone call in your head before you dial.";
 
+// Guard: the gate requires the entry to be 1-140 characters, a single
+// line, and not only whitespace. Fail loudly instead of writing a bad entry.
+if (entry.trim().length === 0) {
+  throw new Error("entry must not be empty or whitespace-only");
+}
+if (entry.length > 140) {
+  throw new Error(`entry is ${entry.length} characters, over the 140 limit`);
+}
+if (entry.includes("\n") || entry.includes("\r")) {
+  throw new Error("entry must be a single line (no newline characters)");
+}
+
 mkdirSync("/output", { recursive: true });
 writeFileSync("/output/entry.txt", entry, "utf8");
 
